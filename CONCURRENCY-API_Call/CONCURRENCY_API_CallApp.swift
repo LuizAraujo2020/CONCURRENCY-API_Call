@@ -9,9 +9,21 @@ import SwiftUI
 
 @main
 struct CONCURRENCY_API_CallApp: App {
+    @StateObject var viewModel = ContentViewModel()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(viewModel: viewModel)
+                .onAppear {
+                    Task {
+                        await viewModel.fetch(type: .album)
+                        await viewModel.fetch(type: .photo)
+                        await viewModel.fetch(type: .post)
+                        await viewModel.fetch(type: .user)
+                        await viewModel.fetch(type: .comment)
+                        await viewModel.fetch(type: .todo)
+                    }
+                }
         }
     }
 }
